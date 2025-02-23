@@ -17,7 +17,7 @@ data class Customer(
   var lastName: String="",
   var cpf: String="",
   var email: String="",
-  var income: String="",
+  var income: String="", // rendiemnto, media salarial
   var address: String="",
   var credits: List<String> = mutableListOf(),
 
