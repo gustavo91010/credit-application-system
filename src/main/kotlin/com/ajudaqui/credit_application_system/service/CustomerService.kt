@@ -25,4 +25,14 @@ class CustomerService(private val customerRepository: CustomerRepository) {
   }
 
   private fun save(customer: Customer): Customer = customerRepository.save(customer)
+
+  fun findById(id: Long): Customer =
+          customerRepository.findById(id).orElseThrow {
+            ClassNotFoundException("Cleinte id $id não localizado")
+          }
+
+  fun findByEmail(email: String): Customer =
+          customerRepository.findByEmail(email).orElseThrow {
+            ClassNotFoundException("Email $email não registrado")
+          }
 }
