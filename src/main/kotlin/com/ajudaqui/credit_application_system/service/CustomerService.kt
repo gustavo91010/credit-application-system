@@ -9,7 +9,11 @@ import org.springframework.stereotype.Service
 class CustomerService(private val customerRepository: CustomerRepository) {
 
   fun create(customerDTO: CustomerDTO): Customer {
+var alreadyregistered = customerRepository.alreadyregistered(customerDTO.cpf, customerDTO.email) as Boolean
 
+if(alreadyregistered){
+  // throw NotAut
+}
     return customerDTO.let {
       save(
               Customer(
@@ -39,11 +43,17 @@ class CustomerService(private val customerRepository: CustomerRepository) {
 
   fun delete(id: Long) = customerRepository.delete(findById(id))
 
-fun update(id: Long, customerDTO: CustomerDTO){
-  findById(id).copy(
-    firstName= customerDTO.firstName,
-    lastName= customerDTO.lastName
-  )
-}
-
+  fun update(id: Long, customerDTO: CustomerDTO): Customer {
+    var customerUpdated =
+            findById(id)
+                    .copy(
+                            firstName = customerDTO.firstName,
+                            lastName = customerDTO.lastName,
+                            cpf = customerDTO.cpf,
+                            email = customerDTO.email,
+                            address = customerDTO.address,
+                            income = customerDTO.income
+                    )
+    return customerRepository.save(customerUpdated)
+  }
 }
