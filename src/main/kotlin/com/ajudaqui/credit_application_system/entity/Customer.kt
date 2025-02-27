@@ -14,8 +14,8 @@ data class Customer(
         @Column(nullable = false) var lastName: String = "",
         @Column(nullable = false, unique = true) var cpf: String = "",
         @Column(nullable = false, unique = true) var email: String = "",
-        @Column(nullable = false) var passwore: String = "",
+        @Column(nullable = false) var password: String = "",
         @Column(nullable = false) var income: String = "", // rendiemnto, media salarial
         @Column(nullable = false) var address: String = "",
-        var credits: List<String> = mutableListOf(),
+        // @Column(columnDefinition = "VARCHAR(100)[]") var credits: List<String> = mutableListOf()
 )

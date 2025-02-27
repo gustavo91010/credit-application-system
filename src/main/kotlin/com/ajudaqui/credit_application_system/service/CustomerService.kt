@@ -35,4 +35,15 @@ class CustomerService(private val customerRepository: CustomerRepository) {
           customerRepository.findByEmail(email).orElseThrow {
             ClassNotFoundException("Email $email não registrado")
           }
+  fun findAll(): List<Customer> = customerRepository.findAll()
+
+  fun delete(id: Long) = customerRepository.delete(findById(id))
+
+fun update(id: Long, customerDTO: CustomerDTO){
+  findById(id).copy(
+    firstName= customerDTO.firstName,
+    lastName= customerDTO.lastName
+  )
+}
+
 }
