@@ -1,6 +1,7 @@
 package com.ajudaqui.credit_application_system.service
 
 import com.ajudaqui.credit_application_system.dto.CustomerDTO
+import com.ajudaqui.credit_application_system.entity.Address
 import com.ajudaqui.credit_application_system.entity.Customer
 import com.ajudaqui.credit_application_system.exception.NoAutorizationException
 import com.ajudaqui.credit_application_system.repository.CustomerRepository
@@ -10,14 +11,8 @@ import org.springframework.stereotype.Service
 class CustomerService(private val customerRepository: CustomerRepository) {
 
   fun create(customerDTO: CustomerDTO): Customer {
-    print(customerDTO.cpf)
-    print(customerDTO.email)
-    var alreadyregistered =
-            customerRepository.alreadyregistered(customerDTO.cpf, customerDTO.email) 
-
-print("Tem?? $alreadyregistered")
+    var alreadyregistered = customerRepository.alreadyregistered(customerDTO.cpf, customerDTO.email)
     if (alreadyregistered) {
-
       throw NoAutorizationException("Email / CPF já cadastrado")
     }
     return customerDTO.let {
@@ -28,7 +23,7 @@ print("Tem?? $alreadyregistered")
                       cpf = it.cpf,
                       email = it.email,
                       income = it.income,
-                      address = it.address,
+                      address = Address( it.zipCode, it.street, it.number),
               )
       )
     }
@@ -44,6 +39,10 @@ print("Tem?? $alreadyregistered")
   fun findByEmail(email: String): Customer =
           customerRepository.findByEmail(email).orElseThrow {
             ClassNotFoundException("Email $email não registrado")
+          }
+  fun findByCpf(cpf: String): Customer =
+          customerRepository.findByCpf(cpf).orElseThrow {
+            ClassNotFoundException("CPF de numeero $cpf não registrado")
           }
   fun findAll(): List<Customer> = customerRepository.findAll()
 

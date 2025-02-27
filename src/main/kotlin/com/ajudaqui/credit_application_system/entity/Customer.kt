@@ -5,6 +5,7 @@ import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.OneToMany
 
 @Entity
 // @Table(name = "client")
@@ -16,6 +17,8 @@ data class Customer(
         @Column(nullable = false, unique = true) var email: String = "",
         @Column(nullable = false) var password: String = "",
         @Column(nullable = false) var income: String = "", // rendiemnto, media salarial
-        @Column(nullable = false) var address: String = "",
+        // @Column(nullable = false) var address: String = "",
         // @Column(columnDefinition = "VARCHAR(100)[]") var credits: List<String> = mutableListOf()
+        @OneToMany(mappedBy = "customer")
+        var address : List<Address> = mutableListOf() 
 )
