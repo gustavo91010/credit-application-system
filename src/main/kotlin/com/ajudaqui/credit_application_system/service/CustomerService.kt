@@ -2,6 +2,7 @@ package com.ajudaqui.credit_application_system.service
 
 import com.ajudaqui.credit_application_system.dto.CustomerDTO
 import com.ajudaqui.credit_application_system.entity.Customer
+import com.ajudaqui.credit_application_system.exception.NoAutorizationException
 import com.ajudaqui.credit_application_system.repository.CustomerRepository
 import org.springframework.stereotype.Service
 
@@ -9,11 +10,16 @@ import org.springframework.stereotype.Service
 class CustomerService(private val customerRepository: CustomerRepository) {
 
   fun create(customerDTO: CustomerDTO): Customer {
-var alreadyregistered = customerRepository.alreadyregistered(customerDTO.cpf, customerDTO.email) as Boolean
+    print(customerDTO.cpf)
+    print(customerDTO.email)
+    var alreadyregistered =
+            customerRepository.alreadyregistered(customerDTO.cpf, customerDTO.email) 
 
-if(alreadyregistered){
-  // throw NotAut
-}
+print("Tem?? $alreadyregistered")
+    if (alreadyregistered) {
+
+      throw NoAutorizationException("Email / CPF já cadastrado")
+    }
     return customerDTO.let {
       save(
               Customer(

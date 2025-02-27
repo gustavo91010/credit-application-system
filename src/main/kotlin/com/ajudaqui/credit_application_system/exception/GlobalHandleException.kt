@@ -17,7 +17,7 @@ class GlobalHandleException {
   fun handleException(ex: Exception, request: WebRequest): ResponseEntity<ErrorResponse> {
 
     val status = exceptionStatus[ex::class.java] ?: HttpStatus.INTERNAL_SERVER_ERROR
-    val message = formatMessageException(ex) 
+    val message = formatMessageException(ex)
 
     logger.error(message)
 
@@ -48,6 +48,7 @@ class GlobalHandleException {
           mapOf(
                   BeanCreationException::class.java to HttpStatus.BAD_REQUEST,
                   ClassNotFoundException::class.java to HttpStatus.NOT_FOUND,
+                  NoAutorizationException::class.java to HttpStatus.UNAUTHORIZED,
           )
   data class ErrorResponse(
           val message: String,
