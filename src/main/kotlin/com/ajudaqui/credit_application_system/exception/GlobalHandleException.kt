@@ -5,6 +5,7 @@ import org.springframework.beans.factory.BeanCreationException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
+import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.context.request.WebRequest
 
 @ControllerAdvice
@@ -12,10 +13,11 @@ class GlobalHandleException {
 
   private val logger = LoggerFactory.getLogger(GlobalHandleException::class.java)
 
+  @ExceptionHandler(Exception::class)
   fun handleException(ex: Exception, request: WebRequest): ResponseEntity<ErrorResponse> {
 
     val status = exceptionStatus[ex::class.java] ?: HttpStatus.INTERNAL_SERVER_ERROR
-    val message = "deu pau boy..."
+    val message = formatMessageException(ex) 
 
     logger.error(message)
 
@@ -25,8 +27,28 @@ class GlobalHandleException {
     return ResponseEntity(errorResponse, status)
   }
 
-  private val exceptionStatus = mapOf(BeanCreationException::class.java to HttpStatus.BAD_REQUEST)
+  private fun formatMessageException(ex: Exception): String {
+    val stackTraceElement =
+            ex.stackTrace.firstOrNull { it.className.startsWith("com.ajudaqui.gestor360_api") }
 
+    val callerInfo: String =
+            if (stackTraceElement != null) {
+
+              val simpleClassName = stackTraceElement.className.substringAfterLast(".")
+              val methodName = stackTraceElement.methodName
+              val lineNumber = stackTraceElement.lineNumber
+
+              "Error of type ${ex::class.java.simpleName}: ${ex.message} in $simpleClassName.$methodName() at line $lineNumber"
+            } else {
+              "Error: ${ex.message}."
+            }
+    return callerInfo
+  }
+  private val exceptionStatus =
+          mapOf(
+                  BeanCreationException::class.java to HttpStatus.BAD_REQUEST,
+                  ClassNotFoundException::class.java to HttpStatus.NOT_FOUND,
+          )
   data class ErrorResponse(
           val message: String,
           val timestamp: String = java.time.LocalDateTime.now().toString(),
