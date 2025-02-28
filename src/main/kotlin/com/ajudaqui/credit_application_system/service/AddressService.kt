@@ -20,4 +20,11 @@ class AddressService(private val addressRepository: AddressRepository) {
           addressRepository.findByZipCode(zipCode).orElseThrow {
             ClassNotFoundException("Caixa postal numero $zipCode não localizado")
           }
+
+  fun addAdress(address: MutableList<Address>, zipCode: String, street: String, number: String) =
+          address.apply { add(save(Address(zipCode = zipCode, street = street, number = number))) }
+
+
+  fun newListAdress(zipCode: String, street: String, number: String): MutableList<Address> =
+          mutableListOf(save(Address(zipCode = zipCode, street = street, number = number)))
 }
