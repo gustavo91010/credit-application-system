@@ -22,6 +22,9 @@ class CustomerController(private val customerService: CustomerService) {
 
 @GetMapping("/id/{id}")
   fun findById(@PathVariable id: Long):Customer{
+    
+
+
     return customerService.findById(id)
   }
 }

@@ -32,7 +32,7 @@ class CustomerService(
                               email = it.email,
                               income = it.income,
                       )
-                      .apply { this.address.add(adrress)}
+                      .also { it.address.add(adrress) }
       )
     }
   }
